@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 
 var cert = fs.readFileSync('./jwtRS256.key');
 
+
 /* GET home page. */
 router.get('/', function(req, res, next) {
     res.render('index', { title: 'Express' });
@@ -14,18 +15,27 @@ router.get('/', function(req, res, next) {
 
 router.post('/register', function(req, res, next) {
     const body = req.body;
-
-    bcrypt.hash(body.password, 10, function(err, hash) {
-        if(err) {
-            return res.status(500).json({
-                error: err
-            });
+    models.User.findOne({
+        where: {
+            email: body.email
+        }
+    }).then(function(user) {
+        if(user) {
+            return res.status(409).send("User Already Exists");
         } else {
-            models.User.create({
-                email: body.email,
-                password: hash
-            }).then(function() {
-                res.status(200).send("User Created");
+            bcrypt.hash(body.password, 10, function(err, hash) {
+                if(err) {
+                    return res.status(500).json({
+                        error: err
+                    });
+                } else {
+                    models.User.create({
+                        email: body.email,
+                        password: hash
+                    }).then(function() {
+                        res.status(200).send("User Created");
+                    });
+                }
             });
         }
     });
