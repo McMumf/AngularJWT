@@ -1,7 +1,11 @@
 var express = require('express');
 var router = express.Router();
 var models = require('../models');
+var fs = require('fs');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
+var cert = fs.readFileSync('./jwtRS256.key');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -41,9 +45,17 @@ router.post('/login', function(req, res, next) {
                     failed: 'Incorrect Login'
                 });
             } else if(result) {
-                res.status(200).json({
-                    success: 'Successful Login'
-                 });
+                const JWTToken = jwt.sign({
+                    email: user.email,
+                    id: user.id
+                  }, cert, {
+                      algorithm: 'RS256',
+                      expiresIn: '2h'
+                   });
+                   return res.status(200).json({
+                     success: 'Successful Login',
+                     token: JWTToken
+                   });
             } else {
                 res.status(401).json({
                     failed: 'Incorrect Login'
