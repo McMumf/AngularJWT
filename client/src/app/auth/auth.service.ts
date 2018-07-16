@@ -26,6 +26,7 @@ export class AuthService {
       .pipe(
         map(result => {
           localStorage.setItem('token', result.token);
+          console.log("TOKEN:" + localStorage.getItem('token'));
           return true;
         })
       );
@@ -33,10 +34,14 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    this.router.navigate(['login']);
   }
 
   public get loggedIn(): boolean {
-    return (localStorage.getItem('token') !== null);
+    if(localStorage.getItem('token') !== null) {
+      return true;
+    }
+    return false;
   }
 
 }

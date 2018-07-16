@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule, MatIconModule, MatListModule, MatSidenavModule, MatGridListModule } from '@angular/material';
+import {MatInputModule} from '@angular/material/input';
+
 import { FormsModule } from '@angular/forms';
 import { HttpModule} from '@angular/http';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
@@ -24,13 +28,22 @@ export function tokenGetter() {
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    RegisterComponent
+    RegisterComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpModule,
+    BrowserAnimationsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatMenuModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
+    MatInputModule,
     HttpClientModule,
+    MatGridListModule,
     FormsModule,
     JwtModule.forRoot({
       config: {

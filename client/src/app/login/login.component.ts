@@ -8,6 +8,7 @@ import { first } from 'rxjs/operators';
   templateUrl: './login.component.html'
 })
 export class LoginComponent {
+
   public email: string;
   public password: string;
   public error: string;

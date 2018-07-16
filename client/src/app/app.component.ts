@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
+import {MediaMatcher} from '@angular/cdk/layout';
+import { JwtHelperService } from "@auth0/angular-jwt";
+import { user } from "./user";
 
 @Component({
   selector: 'app-root',
@@ -9,12 +12,19 @@ import { AuthService } from './auth/auth.service';
 })
 export class AppComponent {
 
-  title="app";
+  mobileQuery: MediaQueryList;
 
-  constructor(private auth: AuthService, private router: Router) { }
+  private _mobileQueryListener: () => void;
 
-  logout() {
-    this.auth.logout();
-    this.router.navigate(['login']);
+  constructor(private auth: AuthService, private router: Router, changeDetectorRef: ChangeDetectorRef, media: MediaMatcher, private jwt: JwtHelperService) {
+    this.mobileQuery = media.matchMedia('(max-width: 600px)');
+    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
   }
+
+    ngOnDestroy(): void {
+      this.mobileQuery.removeListener(this._mobileQueryListener);
+      this.auth.logout();
+    }
+
 }
