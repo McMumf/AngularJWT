@@ -7,16 +7,18 @@ import { LoginComponent } from './login/login.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule, MatIconModule, MatListModule, MatSidenavModule, MatGridListModule } from '@angular/material';
+import { MatButtonModule, MatCardModule, MatMenuModule, MatToolbarModule,
+  MatIconModule, MatListModule, MatSidenavModule, MatGridListModule } from '@angular/material';
 import {MatInputModule} from '@angular/material/input';
 
 import { FormsModule } from '@angular/forms';
 import { HttpModule} from '@angular/http';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { JwtModule } from '@auth0/angular-jwt';
-import { AuthService } from './auth/auth.service'
+import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth-guard.guard';
+import { TokenInterceptor } from './auth/auth.interceptor';
 import { RegisterComponent } from './register/register.component';
 
 export function tokenGetter() {
@@ -53,7 +55,13 @@ export function tokenGetter() {
       }
     })
   ],
-  providers: [ AuthService, AuthGuard ],
+  providers: [ AuthService, AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
