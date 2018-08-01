@@ -5,8 +5,8 @@ var fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-var cert = fs.readFileSync('./jwtRS256.key');
-
+// Ran into issue using pem keys 
+//const cert = fs.readFileSync('./jwtRS256.key');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -42,6 +42,12 @@ router.post('/register', function(req, res, next) {
 
 });
 
+router.get('/info', checkIfAuthenticated, function(req, res, next) {
+    res.json({
+        message: 'Hooray!'
+    });
+});
+
 router.post('/login', function(req, res, next) {
     const body = req.body;
     models.User.findOne({
@@ -58,14 +64,14 @@ router.post('/login', function(req, res, next) {
                 const JWTToken = jwt.sign({
                     email: user.email,
                     id: user.id
-                  }, cert, {
-                      algorithm: 'RS256',
-                      expiresIn: '2h'
-                   });
-                   return res.status(200).json({
-                     success: 'Successful Login',
-                     token: JWTToken
-                   });
+                }, "insert certs here", {
+                    algorithm: 'HS256',
+                    expiresIn: '1h'
+                });
+                return res.status(200).json({
+                    success: 'Successful Login',
+                    token: JWTToken
+                });
             } else {
                 res.status(401).json({
                     failed: 'Incorrect Login'
@@ -74,5 +80,26 @@ router.post('/login', function(req, res, next) {
         });
     });
 });
+
+function checkIfAuthenticated(req, res, next) {
+    var token = req.get('Authorization');
+    jwt.verify(token, "insert certs here", { algorithms: ['HS256'] }, function(err, decoded) {
+        let now = new Date().getTime() / 1000;
+        console.log(now);
+        if(err) {
+            console.log(err);
+            /*res.send(401).json({
+                failed: 'Not Authorized'
+            })*/
+        } else if(now > decoded.exp) {
+            console.log("Expired token");
+            res.sendStatus(401).j;
+        } else {
+            //req.decoded = decoded;
+            console.log("Authorized");
+            next();
+        }
+    });
+}
 
 module.exports = router;

@@ -2,17 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
 
-  url: string = "http://localhost:3000";
+  url = 'http://localhost:3000';
 
   constructor(private http: HttpClient, private router: Router) { }
 
   register(email: string, password: string) {
-    return this.http.post<{token: string}>(this.url+'/register', {email: email, password: password})
+    return this.http.post<{token: string}>(this.url + '/register', {email: email, password: password})
       .pipe(
         map(result => {
           localStorage.setItem('token', result.token);
@@ -22,11 +22,12 @@ export class AuthService {
   }
 
   login(email: string, password: string): Observable<boolean> {
-    return this.http.post<{token: string}>(this.url+'/login', {email: email, password: password})
-      .pipe(
+    return this.http.post<{token: string}>(this.url + '/login', {
+      email: email,
+      password: password
+    }).pipe(
         map(result => {
           localStorage.setItem('token', result.token);
-          console.log("TOKEN:" + localStorage.getItem('token'));
           return true;
         })
       );
@@ -37,8 +38,12 @@ export class AuthService {
     this.router.navigate(['login']);
   }
 
+  getInfo() {
+    return this.http.get(this.url + '/info');
+  }
+
   public get loggedIn(): boolean {
-    if(localStorage.getItem('token') !== null) {
+    if (localStorage.getItem('token') !== null) {
       return true;
     }
     return false;
