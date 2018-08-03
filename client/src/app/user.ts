@@ -1,5 +1,5 @@
-export class user {
-    email: string
-    firstName: string
-    lastName: string
+export class User {
+    email: string;
+    firstName: string;
+    lastName: string;
 }

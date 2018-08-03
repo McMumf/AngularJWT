@@ -83,15 +83,15 @@ router.post('/login', function(req, res, next) {
 
 function checkIfAuthenticated(req, res, next) {
     var token = req.get('Authorization');
-    jwt.verify(token, "insert certs here", { algorithms: ['HS256'] }, function(err, decoded) {
+    console.log("TOKEN" + token);
+    jwt.verify(token, "insert certs here", { algorithms: ['HS256'] }, function(err, decodedToken) {
         let now = new Date().getTime() / 1000;
-        console.log(now);
-        if(err) {
-            console.log(err);
+        if(err || !decodedToken) {
+            console.log("ERROR: " + err);
             /*res.send(401).json({
                 failed: 'Not Authorized'
             })*/
-        } else if(now > decoded.exp) {
+        } else if(now > decodedToken.exp) {
             console.log("Expired token");
             res.sendStatus(401);
         } else {
