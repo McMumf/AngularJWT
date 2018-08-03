@@ -16,6 +16,7 @@ import { HttpModule} from '@angular/http';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { JwtModule } from '@auth0/angular-jwt';
+import { InfoService } from './services/info.service';
 import { AuthService } from './auth/auth.service';
 import { AuthGuard } from './auth/auth-guard.guard';
 import { TokenInterceptor } from './auth/auth.interceptor';

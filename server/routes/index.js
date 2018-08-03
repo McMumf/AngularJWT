@@ -5,7 +5,7 @@ var fs = require('fs');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
-// Ran into issue using pem keys 
+// Ran into issue using pem keys
 //const cert = fs.readFileSync('./jwtRS256.key');
 
 /* GET home page. */
@@ -43,7 +43,7 @@ router.post('/register', function(req, res, next) {
 });
 
 router.get('/info', checkIfAuthenticated, function(req, res, next) {
-    res.json({
+    res.status(200).json({
         message: 'Hooray!'
     });
 });
@@ -93,7 +93,7 @@ function checkIfAuthenticated(req, res, next) {
             })*/
         } else if(now > decoded.exp) {
             console.log("Expired token");
-            res.sendStatus(401).j;
+            res.sendStatus(401);
         } else {
             //req.decoded = decoded;
             console.log("Authorized");

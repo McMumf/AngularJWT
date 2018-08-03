@@ -38,10 +38,6 @@ export class AuthService {
     this.router.navigate(['login']);
   }
 
-  getInfo() {
-    return this.http.get(this.url + '/info');
-  }
-
   public get loggedIn(): boolean {
     if (localStorage.getItem('token') !== null) {
       return true;
