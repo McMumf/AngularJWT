@@ -83,7 +83,6 @@ router.post('/login', function(req, res, next) {
 
 function checkIfAuthenticated(req, res, next) {
     var token = req.get('Authorization');
-    console.log("TOKEN" + token);
     jwt.verify(token, "insert certs here", { algorithms: ['HS256'] }, function(err, decodedToken) {
         let now = new Date().getTime() / 1000;
         if(err || !decodedToken) {

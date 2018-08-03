@@ -20,7 +20,8 @@ export class LoginComponent {
       .pipe(first())
       .subscribe(
         result => this.router.navigate(['dashboard']),
-        err => this.error = 'Could not authenticate'
+        err => this.error = err
+        //err => this.error = 'Could not authenticate'
       );
   }
 }
